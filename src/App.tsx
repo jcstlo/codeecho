@@ -30,7 +30,7 @@ function App() {
   }
 
   function updateTemplateVariablesFromVariables(variableTextField: string, varName: string) {
-    let modifiedTemplateVariables: any = templateVariables;
+    let modifiedTemplateVariables: any = {...templateVariables}
     modifiedTemplateVariables[varName] = variableTextField;
     setTemplateVariables(modifiedTemplateVariables);
   }
@@ -50,16 +50,15 @@ function App() {
     })
   }
 
-  console.log(templateVariables)
-
-  // TODO: create outputCode
-    // if templateVariables.length > 0:
-      // for each property in templateVariables:
-        // if property value is not empty:
-          // replace inputString {{.*}} with property value
-      // outputCode = final modified code
-    // else:
-      // outputCode = sourceCode
+  let outputCode = sourceCode;
+  if (Object.keys(templateVariables).length > 0) {
+    let copy: any = templateVariables;
+    for (const property in copy) {
+      let stringToReplace = `{{${property}}}`
+      let stringValue = copy[property];
+      outputCode = outputCode.replace(stringToReplace, stringValue);
+    }
+  }
 
   return (
     <>
@@ -86,7 +85,7 @@ function App() {
           InputProps={{
             readOnly: true,
           }}
-          value={sourceCode}
+          value={outputCode}
         />
       </div>
       {variableTextFields}
