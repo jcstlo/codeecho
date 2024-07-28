@@ -6,11 +6,11 @@ import { useState } from 'react';
 function App() {
   const [sourceCode, setSourceCode] = useState("")
   const [templateVariables, setTemplateVariables] = useState({})
-    // templateVariables is an object of (variableName, variableInstanceList) pairs
+    // templateVariables is an object of variableName:variableTextField pairs
 
   function updateTemplateVariablesFromSource(inputCode: string) {
-    // let oldTemplateVariables = templateVariables;
-    let newTemplateVariables = {};
+    let oldTemplateVariables: any = templateVariables;
+    let newTemplateVariables: any = {};
 
     const tempVarRegex = /{{([^ {}]*)}}/g;
     const found = inputCode.match(tempVarRegex);
@@ -19,19 +19,38 @@ function App() {
       let extractedKey = item.slice(2, -2); // remove "{{" and "}}"
       Object.defineProperty(newTemplateVariables, extractedKey, {value: index, writable: true, enumerable: true});
     });
-    // TODO: check if oldTemplateVariables has values to carry over
+
+    // check if oldTemplateVariables has values to carry over
+    for (const property in newTemplateVariables) {
+      if (Object.keys(oldTemplateVariables).includes(property)) {
+        newTemplateVariables[property] = oldTemplateVariables[property];
+      }
+    }
     setTemplateVariables(newTemplateVariables);
   }
 
-  // TODO: function updateTemplateVariablesFromVariables(variableTextField: string)
+  function updateTemplateVariablesFromVariables(variableTextField: string, varName: string) {
+    let modifiedTemplateVariables: any = templateVariables;
+    modifiedTemplateVariables[varName] = variableTextField;
+    setTemplateVariables(modifiedTemplateVariables);
+  }
 
   let variableTextFields = [<div key="empty"></div>]
   if (Object.keys(templateVariables).length > 0) {
     variableTextFields = Object.keys(templateVariables).map(key => {
-      // TODO: replace <p> with a TemplateVariableTextField
-      return <p key={key}>{key}</p>;
+      return <div key={key}>
+        <h1>{key}</h1>
+        <TextField
+          multiline
+          onChange={e => {
+            updateTemplateVariablesFromVariables(e.target.value, key);
+          }}
+        />
+      </div>;
     })
   }
+
+  console.log(templateVariables)
 
   // TODO: create outputCode
     // if templateVariables.length > 0:
