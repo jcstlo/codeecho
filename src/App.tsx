@@ -55,10 +55,13 @@ function App() {
     let copy: any = templateVariables;
     for (const property in copy) {
       let stringToReplace = `{{${property}}}`
+      let stringToReplaceRegexGlobal = new RegExp(stringToReplace, "g")
       let stringValue = copy[property];
-      outputCode = outputCode.replace(stringToReplace, stringValue);
+      outputCode = outputCode.replace(stringToReplaceRegexGlobal, stringValue);
     }
   }
+
+  console.log(templateVariables)
 
   return (
     <>
