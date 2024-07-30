@@ -1,11 +1,20 @@
 import { TextField } from '@mui/material';
 import './App.css'
 import { useState } from 'react';
+import { createTheme } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
 
 function App() {
   const [sourceCode, setSourceCode] = useState("")
   const [templateVariables, setTemplateVariables] = useState({})
     // templateVariables is an object of variableName:variableTextField pairs
+
+  const monospaceFontTheme = createTheme({
+    typography: {
+      fontFamily: "Martian Mono",
+      fontSize: 12,
+    },
+  });
 
   function updateTemplateVariablesFromSource(inputCode: string) {
     let oldTemplateVariables: any = templateVariables;
@@ -101,37 +110,39 @@ function App() {
   }
 
   return (
-    <div className="flex-container">
-      <div className="flex-item-equal-width right-padding">
-        <TextField
-          id="code-input"
-          placeholder="Place source code here"
-          rows={6}
-          multiline
-          fullWidth
-          value={sourceCode}
-          onChange={e => {
-            setSourceCode(e.target.value);
-            updateTemplateVariablesFromSource(e.target.value);
-          }}
-        />
-        {variableTextFields}
+    <ThemeProvider theme={monospaceFontTheme}>
+      <div className="flex-container">
+        <div className="flex-item-equal-width right-padding">
+            <TextField
+              id="code-input"
+              placeholder="Place source code here"
+              rows={6}
+              multiline
+              fullWidth
+              value={sourceCode}
+              onChange={e => {
+                setSourceCode(e.target.value);
+                updateTemplateVariablesFromSource(e.target.value);
+              }}
+            />
+          {variableTextFields}
+        </div>
+        <div className="flex-item-equal-width left-padding">
+          <TextField
+            id="code-output"
+            placeholder="Output"
+            multiline
+            minRows={6}
+            maxRows={30}
+            fullWidth
+            InputProps={{
+              readOnly: true,
+            }}
+            value={finalOutputCode}
+            />
+        </div>
       </div>
-      <div className="flex-item-equal-width left-padding">
-        <TextField
-          id="code-output"
-          placeholder="Output"
-          multiline
-          minRows={6}
-          maxRows={30}
-          fullWidth
-          InputProps={{
-            readOnly: true,
-          }}
-          value={finalOutputCode}
-        />  
-      </div>
-    </div>
+    </ThemeProvider>
   )
 }
 
