@@ -17,7 +17,8 @@ function App() {
 
     found?.forEach((item, index) => {
       let extractedKey = item.slice(2, -2); // remove "{{" and "}}"
-      Object.defineProperty(newTemplateVariables, extractedKey, {value: index, writable: true, enumerable: true});
+      // TODO: refactor so the value is a list already instead of a string delimited by \n
+      Object.defineProperty(newTemplateVariables, extractedKey, {value: index.toString(), writable: true, enumerable: true});
     });
 
     // check if oldTemplateVariables has values to carry over
@@ -50,18 +51,52 @@ function App() {
     })
   }
 
-  let outputCode = sourceCode;
-  if (Object.keys(templateVariables).length > 0) {
-    let copy: any = templateVariables;
-    for (const property in copy) {
-      let stringToReplace = `{{${property}}}`
-      let stringToReplaceRegexGlobal = new RegExp(stringToReplace, "g")
-      let stringValue = copy[property];
-      outputCode = outputCode.replace(stringToReplaceRegexGlobal, stringValue);
+  function createObjectOfPropertyLists() {
+    // TODO: to be refactored into the main React object
+    let outputObject = {};
+    let copyTemplateVariables: any = {...templateVariables}
+    for (const property in templateVariables) {
+      let s = copyTemplateVariables[property];
+      let array = s.split(/\r?\n/)
+      Object.defineProperty(outputObject, property, {value: array, writable: true, enumerable: true});
     }
+
+    return outputObject;
   }
 
-  console.log(templateVariables)
+  function checkEqualVariableInstances(obj: any) {
+    // returns # of variable instances, or -1 if variable instance count is inconsistent across all variables
+    let firstPropertyFlag = true;
+    let expectedInstances = 0;
+    for (const property in obj) {
+      if (firstPropertyFlag) {
+        expectedInstances = obj[property].length;
+        firstPropertyFlag = false;
+      } else {
+        if (obj[property].length != expectedInstances) {
+          return -1;
+        }
+      }
+    }
+
+    return expectedInstances;
+  }
+
+  let propertyListsObject: any = createObjectOfPropertyLists();
+  const instancesCount = checkEqualVariableInstances(propertyListsObject);
+  console.log(`instancesCount = ${instancesCount}`);
+
+  let finalOutputCode = "";
+  for (let i = 0; i < instancesCount; i++) {
+    let intermediateOutputCode = sourceCode;
+    for (const property in propertyListsObject) {
+      let stringToReplace = `{{${property}}}`
+      let stringToReplaceRegexGlobal = new RegExp(stringToReplace, "g")
+      let stringValue = propertyListsObject[property][i]
+      intermediateOutputCode = intermediateOutputCode.replace(stringToReplaceRegexGlobal, stringValue)
+    }
+    finalOutputCode = finalOutputCode.concat(intermediateOutputCode + '\n');
+  }
 
   return (
     <>
@@ -88,7 +123,7 @@ function App() {
           InputProps={{
             readOnly: true,
           }}
-          value={outputCode}
+          value={finalOutputCode}
         />
       </div>
       {variableTextFields}
