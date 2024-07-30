@@ -98,15 +98,21 @@ function App() {
   console.log(`instancesCount = ${instancesCount}`);
 
   let finalOutputCode = "";
-  for (let i = 0; i < instancesCount; i++) {
-    let intermediateOutputCode = sourceCode;
-    for (const property in propertyListsObject) {
-      let stringToReplace = `{{${property}}}`
-      let stringToReplaceRegexGlobal = new RegExp(stringToReplace, "g")
-      let stringValue = propertyListsObject[property][i]
-      intermediateOutputCode = intermediateOutputCode.replace(stringToReplaceRegexGlobal, stringValue)
+  if (instancesCount > 0) {
+    for (let i = 0; i < instancesCount; i++) {
+      let intermediateOutputCode = sourceCode;
+      for (const property in propertyListsObject) {
+        let stringToReplace = `{{${property}}}`
+        let stringToReplaceRegexGlobal = new RegExp(stringToReplace, "g")
+        let stringValue = propertyListsObject[property][i]
+        intermediateOutputCode = intermediateOutputCode.replace(stringToReplaceRegexGlobal, stringValue)
+      }
+      finalOutputCode = finalOutputCode.concat(intermediateOutputCode + '\n');
     }
-    finalOutputCode = finalOutputCode.concat(intermediateOutputCode + '\n');
+  } else if (instancesCount == -1) {
+    finalOutputCode = "ERROR: There are an unequal amount of lines across all variables!"
+  } else {
+    finalOutputCode = sourceCode;
   }
 
   return (
