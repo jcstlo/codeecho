@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import { TextField } from '@mui/material';
 import './App.css'
 import { useState } from 'react';
@@ -43,6 +42,9 @@ function App() {
         <h1>{key}</h1>
         <TextField
           multiline
+          fullWidth
+          minRows={2}
+          maxRows={6}
           onChange={e => {
             updateTemplateVariablesFromVariables(e.target.value, key);
           }}
@@ -99,9 +101,8 @@ function App() {
   }
 
   return (
-    <>
-      <Button variant="contained">Hello world</Button>
-      <div className="flex-container">
+    <div className="flex-container">
+      <div className="flex-item-equal-width right-padding">
         <TextField
           id="code-input"
           placeholder="Place source code here"
@@ -114,20 +115,23 @@ function App() {
             updateTemplateVariablesFromSource(e.target.value);
           }}
         />
+        {variableTextFields}
+      </div>
+      <div className="flex-item-equal-width left-padding">
         <TextField
           id="code-output"
           placeholder="Output"
-          rows={6}
           multiline
+          minRows={6}
+          maxRows={30}
           fullWidth
           InputProps={{
             readOnly: true,
           }}
           value={finalOutputCode}
-        />
+        />  
       </div>
-      {variableTextFields}
-    </>
+    </div>
   )
 }
 

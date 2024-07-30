@@ -1,3 +1,15 @@
 .flex-container {
     display: flex;
 }
+
+.flex-item-equal-width {
+    flex-grow: 1;
+}
+
+.right-padding {
+    padding-right: 4px;
+}
+
+.left-padding {
+    padding-left: 4px;
+}
