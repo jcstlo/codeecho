@@ -133,49 +133,99 @@ function App() {
   }
 
   return (
-    <div className="flex-container">
-        <div className="flex-item-equal-width right-padding">
-            <ThemeProvider theme={headingFontTheme}>
-              <Typography variant="h6">Input</Typography>
-            </ThemeProvider>
-            <ThemeProvider theme={monospaceFontTheme}>
-              <TextField
-                id="code-input"
-                placeholder="Place source code here"
-                rows={6}
-                multiline
-                fullWidth
-                value={sourceCode}
-                onChange={e => {
-                  setSourceCode(e.target.value);
-                  updateTemplateVariablesFromSource(e.target.value);
-                }}
-              />
-            </ThemeProvider>
-            <ThemeProvider theme={headingFontTheme}>
-              {variableTextFields}
-            </ThemeProvider>
-            </div>
-        <div className="flex-item-equal-width left-padding">
-            <ThemeProvider theme={headingFontTheme}>
-              <Typography variant="h6">Output</Typography>
-            </ThemeProvider>
-            <ThemeProvider theme={monospaceFontTheme}>
-              <TextField
-              id="code-output"
-              placeholder="Output"
+    <>
+      <ThemeProvider theme={headingFontTheme}>
+        <Typography variant="h3" align="center">
+          CodeEcho - interactive code template tool
+        </Typography>
+        <Typography align="center" mt="15px">
+          {`Enter a code template in the left box, define variables with double curly braces, and see the result in the right box!`}
+        </Typography>
+        <Typography align="center" mt="15px" mb="15px">Example:</Typography>
+      </ThemeProvider>
+      <ThemeProvider theme={monospaceFontTheme}>
+        <div className="example flex-container center-both-axes">
+          <div className="example-input-box">
+            <Typography align="center">Input</Typography>
+            <TextField
+              id="example-input"
               multiline
-              minRows={6}
-              maxRows={30}
-              fullWidth
+              value={"hello {{x}}!"}
               InputProps={{
                 readOnly: true,
               }}
-              value={finalOutputCode}
-              />
-            </ThemeProvider>
-            </div>
+            />
+          </div>
+          <Typography variant="h2" ml="15px" mr="15px">+</Typography>
+          <div className="example-var">
+            <Typography align="center">x: 3 lines</Typography>
+            <TextField
+              id="example-input"
+              multiline
+              value={"world\nstars\nuniverse"}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
+          <Typography variant="h2" ml="15px" mr="15px">=</Typography>
+          <div className="example-output-box">
+            <Typography align="center">Output</Typography>
+            <TextField
+              id="example-input"
+              multiline
+              value={"hello world!\nhello stars!\nhello universe!"}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
+        </div>
+      </ThemeProvider>
+      <div className="flex-container">
+      <div className="flex-item-equal-width right-padding">
+        <ThemeProvider theme={headingFontTheme}>
+          <Typography variant="h6">Input</Typography>
+        </ThemeProvider>
+        <ThemeProvider theme={monospaceFontTheme}>
+          <TextField
+            id="code-input"
+            placeholder="Place source code here"
+            rows={6}
+            multiline
+            fullWidth
+            value={sourceCode}
+            onChange={e => {
+              setSourceCode(e.target.value);
+              updateTemplateVariablesFromSource(e.target.value);
+            }}
+          />
+        </ThemeProvider>
+        <ThemeProvider theme={headingFontTheme}>
+          {variableTextFields}
+        </ThemeProvider>
       </div>
+      <div className="flex-item-equal-width left-padding">
+          <ThemeProvider theme={headingFontTheme}>
+            <Typography variant="h6">Output</Typography>
+          </ThemeProvider>
+          <ThemeProvider theme={monospaceFontTheme}>
+            <TextField
+            id="code-output"
+            placeholder="Output"
+            multiline
+            minRows={6}
+            maxRows={30}
+            fullWidth
+            InputProps={{
+              readOnly: true,
+            }}
+            value={finalOutputCode}
+            />
+          </ThemeProvider>
+          </div>
+    </div>
+  </>
   )
 }
 

@@ -17,3 +17,16 @@
 .var-textfield-margin {
     padding-top: 20px;
 }
+
+.whitespace {
+    white-space: pre-line;
+}
+
+.center-both-axes {
+    justify-content: center;
+    align-items: center;
+}
+
+.example {
+    margin-bottom: 30px;
+}
