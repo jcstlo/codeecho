@@ -112,7 +112,6 @@ function App() {
 
   let propertyListsObject: any = createObjectOfPropertyLists();
   const instancesCount = checkEqualVariableInstances(propertyListsObject);
-  console.log(`instancesCount = ${instancesCount}`);
 
   let finalOutputCode = "";
   if (instancesCount > 0) {
@@ -138,8 +137,8 @@ function App() {
         <Typography variant="h3" align="center">
           CodeEcho - interactive code template tool
         </Typography>
-        <Typography align="center" mt="15px">
-          {`Enter a code template in the left box, define variables with double curly braces, and see the result in the right box!`}
+        <Typography align="center" mt="15px" className="whitespace">
+          {`Enter a code template in the left box, define variables with double curly braces, and see the result in the right box!\nNote: all unique variables must have the same number of lines for the output to render.`}
         </Typography>
         <Typography align="center" mt="15px" mb="15px">Example:</Typography>
       </ThemeProvider>
@@ -211,7 +210,9 @@ function App() {
               <Typography variant="h6">Output</Typography>
             </ThemeProvider>
             <Button
-              onClick={() => navigator.clipboard.writeText(finalOutputCode)}>
+              onClick={() => navigator.clipboard.writeText(finalOutputCode)}
+              size="small"
+            >
               Copy to clipboard
             </Button>
           </div>
