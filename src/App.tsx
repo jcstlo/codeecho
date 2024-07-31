@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { TextField, Button } from '@mui/material';
 import './App.css'
 import { useState } from 'react';
 import { createTheme } from '@mui/material';
@@ -206,9 +206,15 @@ function App() {
         </ThemeProvider>
       </div>
       <div className="flex-item-equal-width left-padding">
-          <ThemeProvider theme={headingFontTheme}>
-            <Typography variant="h6">Output</Typography>
-          </ThemeProvider>
+          <div className="flex-container space-between">
+            <ThemeProvider theme={headingFontTheme}>
+              <Typography variant="h6">Output</Typography>
+            </ThemeProvider>
+            <Button
+              onClick={() => navigator.clipboard.writeText(finalOutputCode)}>
+              Copy to clipboard
+            </Button>
+          </div>
           <ThemeProvider theme={monospaceFontTheme}>
             <TextField
             id="code-output"
