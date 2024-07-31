@@ -1,0 +1,10 @@
+.icon-size {
+    width: 20px;
+    height: 20px;
+}
+
+.icon-container-flex-center {
+    display: flex;
+    justify-content: center;
+    padding-top: 15px;
+}
