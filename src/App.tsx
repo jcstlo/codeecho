@@ -3,6 +3,7 @@ import './App.css'
 import { useState } from 'react';
 import { createTheme } from '@mui/material';
 import { ThemeProvider } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 function App() {
   const [sourceCode, setSourceCode] = useState("")
@@ -13,6 +14,12 @@ function App() {
     typography: {
       fontFamily: "Martian Mono",
       fontSize: 12,
+    },
+  });
+
+  const headingFontTheme = createTheme({
+    typography: {
+      fontFamily: "Open Sans",
     },
   });
 
@@ -44,11 +51,21 @@ function App() {
     setTemplateVariables(modifiedTemplateVariables);
   }
 
+  function numberOfVariableInstances(propertyName: string) {
+    let copyTemplateVariables: any = {...templateVariables};
+    let s = copyTemplateVariables[propertyName];
+    let array = s.split(/\r?\n/);
+    return array.length;
+  }
+
   let variableTextFields = [<div key="empty"></div>]
   if (Object.keys(templateVariables).length > 0) {
     variableTextFields = Object.keys(templateVariables).map(key => {
+      let numInstances = numberOfVariableInstances(key);
       return <div key={key}>
-        <h1>{key}</h1>
+        <Typography variant="h6" className="var-textfield-margin">
+          {`${key}: ${numInstances} ${numInstances>1?"lines":"line"}`}
+        </Typography>
         <TextField
           multiline
           fullWidth
@@ -65,7 +82,7 @@ function App() {
   function createObjectOfPropertyLists() {
     // TODO: to be refactored into the main React object
     let outputObject = {};
-    let copyTemplateVariables: any = {...templateVariables}
+    let copyTemplateVariables: any = {...templateVariables};
     for (const property in templateVariables) {
       let s = copyTemplateVariables[property];
       let array = s.split(/\r?\n/)
@@ -116,39 +133,49 @@ function App() {
   }
 
   return (
-    <ThemeProvider theme={monospaceFontTheme}>
-      <div className="flex-container">
+    <div className="flex-container">
         <div className="flex-item-equal-width right-padding">
-            <TextField
-              id="code-input"
-              placeholder="Place source code here"
-              rows={6}
-              multiline
-              fullWidth
-              value={sourceCode}
-              onChange={e => {
-                setSourceCode(e.target.value);
-                updateTemplateVariablesFromSource(e.target.value);
-              }}
-            />
-          {variableTextFields}
-        </div>
+            <ThemeProvider theme={headingFontTheme}>
+              <Typography variant="h6">Input</Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={monospaceFontTheme}>
+              <TextField
+                id="code-input"
+                placeholder="Place source code here"
+                rows={6}
+                multiline
+                fullWidth
+                value={sourceCode}
+                onChange={e => {
+                  setSourceCode(e.target.value);
+                  updateTemplateVariablesFromSource(e.target.value);
+                }}
+              />
+            </ThemeProvider>
+            <ThemeProvider theme={headingFontTheme}>
+              {variableTextFields}
+            </ThemeProvider>
+            </div>
         <div className="flex-item-equal-width left-padding">
-          <TextField
-            id="code-output"
-            placeholder="Output"
-            multiline
-            minRows={6}
-            maxRows={30}
-            fullWidth
-            InputProps={{
-              readOnly: true,
-            }}
-            value={finalOutputCode}
-            />
-        </div>
+            <ThemeProvider theme={headingFontTheme}>
+              <Typography variant="h6">Output</Typography>
+            </ThemeProvider>
+            <ThemeProvider theme={monospaceFontTheme}>
+              <TextField
+              id="code-output"
+              placeholder="Output"
+              multiline
+              minRows={6}
+              maxRows={30}
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+              value={finalOutputCode}
+              />
+            </ThemeProvider>
+            </div>
       </div>
-    </ThemeProvider>
   )
 }
 
