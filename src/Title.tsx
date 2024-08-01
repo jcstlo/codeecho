@@ -1,7 +1,6 @@
 import { ThemeProvider } from '@mui/material';
 import { headingFontTheme } from './Themes';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import "./Title.css"
 
 export function Title() {
